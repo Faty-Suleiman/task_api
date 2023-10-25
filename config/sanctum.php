@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => 60 * 60]; // token will expire in 1h
 
     /*
     |--------------------------------------------------------------------------
@@ -58,7 +58,7 @@ return [
     | request. You may change the middleware listed below as required.
     |
     */
-
+[
     'middleware' => [
         'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,

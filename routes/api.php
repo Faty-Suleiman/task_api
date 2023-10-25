@@ -1,9 +1,10 @@
 <?php
-
+use Illuminate\Support\Facades\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\_TaskController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaginationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,14 +19,15 @@ use App\Http\Controllers\AuthController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/get-task', [_TaskController::class, 'index']);
-Route::post('/create-task', [TaskController::class, 'store']);
-Route::get('get-single-task/{id}', [TaskController::class, 'show']);
-Route::get('edit-task/{id}/edit',[TaskController::class,'edit']);
-Route::put('update-task/{id}/edit',[TaskController::class,'update']);
-Route::delete('delete-task/{id}/delete',[TaskController::class,'delete']);
-Route::group(['prefix' => 'auth'], function () {
-      Route::post('login', [AuthController::class, 'login']);
-      Route::post('register', [AuthController::class, 'register']);
 
-});
+ Route::get('/get-pages', [PaginationController::class, 'index']);
+Route::group(['prefix' => 'auth'], function () {
+      Route::post('/login', [AuthController::class, 'login']);
+      Route::post('/register', [AuthController::class, 'register']);
+     Route::post('/create-task', [TaskController::class, 'store']);
+    Route::get('/get-single-task/{id}', [TaskController::class, 'show']);
+    Route::delete('/delete-task/{id}',[TaskController::class,'destroy']);
+    Route::put('/update-task/{id}',[TaskController::class,'update']);
+    Route::get('/edit-task/{id}',[TaskController::class,'edit']);
+    Route::get('/get-all-task',[TaskController::class, 'index']);
+ });

@@ -1,8 +1,9 @@
 <?php
 
 namespace Database\Seeders;
- use App\Models\_Task;
+ use App\Models\Task;
  use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+ use Illuminate\Database\Eloquent\Factories\Factory;
  use Illuminate\Database\Seeder;
  use Illuminate\Database\Seeders\DB;
  
@@ -21,16 +22,12 @@ namespace Database\Seeders;
     
     {
 
-       _Task::factory();
+       Task::factory();
            $array = [20];
            $count = count($array);
             
         
         
-    // \App\Models\User::create([
-    //     'name'=>'Ahmad Abubakar',
-    //     'email'=> 'ahm@gmail.com',
-    //     'password'=> Hash::make('secret')
-    //    ]); 
+     
 }
 }

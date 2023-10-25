@@ -4,43 +4,56 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+
 
 class AuthController extends Controller
 {
+    
     // To register user
 public function register(Request $request)
     { 
+        
         // is to validate user
     $request->validate([
-        'name' => 'required|string',
+        'surname' => 'required|string',
+        'otherNames' => 'required|string',
         'email'=>'required|string|unique:users',
         'password'=>'required|string',
-        
+        'phone' => 'required|string|unique:users'
     ]);
     // to create user
+
+
+    $hashedPassword = Hash::make($request->input('password'));
+
+    // Create a new user
     $user = User::create([
-       'name' => $request->name,
-       'email' => $request->email,
-       'password' => $Hash::make($request->password),
+        'surname' => $request->input('surname'),
+        'otherNames' => $request->input('otherNames'),
+        'email' => $request->input('email'),
+        'password' => $hashedPassword,
+        'phone'=> $request->input('phone')
     ]);
+
+    
     if($user){
         // to check if it is user
-         $tokenResult = $user->createToken('Personal Access Token');
-         $token = $tokenResult;
+         $tokenResult = $user->createToken('Personal Access Token')->plainTextToken;
          
          return response()->json([
             'message' => 'Successfully created user!',
-            'accessToken'=> $token,
+            'accessToken'=> $tokenResult,
             ],201);
         }
         else{
-            return response()->json(['error'=>'Provide proper details']);
+            return response()->json(['error'=>'Something went wrong!'],401);
         }
-    }
+   }
 
 
-public function login(Request $request)
+public function login(Request $request) // to create a login for a user
 {
     // to validate user login 
     $request->validate([
@@ -48,15 +61,17 @@ public function login(Request $request)
     'password' => 'required|string',
     
     ]);
+    
     $credentials = $request->only('email', 'password');
 
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
-        $token = $user->createToken('personal access token')->accessToken;
-        return response()->json(['token' => $token, 'token_type'=> 'Bearer'], 200);
+        $expirationTime = 3600; // 1 hour 
+        $token = $user->createToken('Personal Access Token')->plainTextToken;
+        return response()->json(['token' => $token, "data" =>$user, 'token_type'=> 'Bearer', 'expires_in'=> $expirationTime], 200);
     } else {
-        return response()->json(['error' => 'Unauthorized'], 401);
+       return response()->json(['error' => 'Unauthorized'], 401);
     }
-}
+ }
 
-}
+}  

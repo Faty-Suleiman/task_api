@@ -13,9 +13,11 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
+        'surname',
+        'otherNames',
         'email',
         'password',
+        'phone'
     ];
 
     
@@ -25,4 +27,11 @@ class User extends Authenticatable
     ];
 
     
-}
+    
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+};
+
